@@ -71,10 +71,13 @@ function handleAuthClick() {
         if (resp.error !== undefined) {
             throw (resp);
         }
+
+        await getUserData();
+
         document.getElementById('signout_button').style.visibility = 'visible';
         document.getElementById('authorize_button').innerText = 'Refresh';
         document.getElementById('dateForm').removeAttribute("hidden");
-        //await listUpcomingEvents();
+        
     };
 
     if (gapi.client.getToken() === null) {
@@ -101,6 +104,39 @@ function handleSignoutClick() {
     }
 }
 
+// Solo para imprimir el nombre del usuario :D 
+async function getUserData() {
+    let response;
+    try {
+        const request = {
+            'calendarId': 'primary',
+            'maxResults': 1
+        };
+        response = await gapi.client.calendar.events.list(request);
+
+        let userEmail = (response.result.summary);
+
+        function getNameAndLastname(email) {
+            var parts = email.split(".");
+            var name = parts[0];
+            var lastname = parts[1].split("@")[0];
+            return { name: name, lastname: lastname };
+        }
+        
+        let user = (getNameAndLastname(userEmail));
+    
+        const userName = document.getElementById("username");
+        userName.innerHTML += user.name + ' ' + user.lastname + '!';
+        userName.removeAttribute("hidden")
+
+    } catch (err) {
+        document.getElementById('content').innerText = err.message;
+        return;
+    }
+}
+
+
+// Tomamos los inputs de fechas y ejecutamos la función para obtener los eventos
 function searchEvents() {
     document.getElementById('cxTable').hidden = true;
     const table = document.getElementById("cxHoras")
@@ -109,11 +145,10 @@ function searchEvents() {
     startDate = new Date(document.getElementById("startDate").value);
     endDate = new Date(document.getElementById("endDate").value);
 
-
     listUpcomingEvents(startDate, endDate);
-
 }
 
+// Aca es donde llamamos todos los eventos
 async function listUpcomingEvents(start, end) {
     let response;
     try {
@@ -131,9 +166,8 @@ async function listUpcomingEvents(start, end) {
         document.getElementById('content').innerText = err.message;
         return;
     }
-
+    
     const results = response.result
-
     const events = response.result.items;
     if (!events || events.length == 0) {
         document.getElementById('content').innerText = 'No se encontraron eventos.';
@@ -147,8 +181,6 @@ async function listUpcomingEvents(start, end) {
     userEvents.timezone = results.timeZone;
     userEvents.user = results.summary;
     userEvents.activity = {};
-
-    console.log(events)
 
     for (let k in results.items) {
 
