@@ -10,18 +10,18 @@
 </head>
 
 <body>
-    <p>Horas Customer Experience</p>
-    <h1 id="username" hidden>¡Hola </h1>
-    <br>
-    <input type="text" placeholder="Inserte Api key" name="" id="" hidden>
-    <input type="text" placeholder="CLient key" name="" id="" hidden>
-    <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize_button" onclick="handleAuthClick()">Sign in</button>
+    <section id="mod1">
+        <div id="signIn">
+            <h1>Customer Experience</h1>
+            <h2>Registro de Horas</h2>
+            <button id="authorize_button" onclick="handleAuthClick()" class="btn btn-primary">Ingresar</button>
+        </div>
+    </section>
+
     <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
 
+    <h1 id="username" hidden>¡Hola </h1>
     <div id="dateForm" hidden>
-        <br>
-        <br>
         <label for="startDate">Start Date</label>
         <input type="date" id="startDate">
         <label for="endDate">End Date</label>
@@ -30,7 +30,6 @@
     </div>
 
     <div id="cxTable" hidden>
-        <br>
         <table class="table table-hover">
             <thead class="thead-dark">
                 <th>Nombre del evento</th>
