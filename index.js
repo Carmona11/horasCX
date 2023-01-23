@@ -77,7 +77,7 @@ function handleAuthClick() {
         document.getElementById('mod1').hidden = true;
         document.getElementById('signout_button').style.visibility = 'visible';
         document.getElementById('authorize_button').innerText = 'Refresh';
-        document.getElementById('dateForm').removeAttribute("hidden");
+        document.getElementById('mod2').removeAttribute("hidden");
         
     };
 
@@ -99,9 +99,11 @@ function handleSignoutClick() {
     if (token !== null) {
         google.accounts.oauth2.revoke(token.access_token);
         gapi.client.setToken('');
-        document.getElementById('content').innerText = '';
-        document.getElementById('authorize_button').innerText = 'Authorize';
+        document.getElementById('mod2').hidden = true;
+        document.getElementById('cxTable').hidden = true;
         document.getElementById('signout_button').style.visibility = 'hidden';
+        document.getElementById('mod1').hidden = false;
+        alert("ud se ha salido")
     }
 }
 
@@ -247,16 +249,16 @@ async function listUpcomingEvents(start, end) {
 
 
         table.innerHTML += `<tr>
-        <td id ="r${k+1}">${userEvents.activity[k].eventName} </td>
-        <td id ="r${k+1}">${userEvents.activity[k].type} </td>
-        <td id ="r${k+1}">${userEvents.activity[k].activity} </td>
-        <td id ="r${k+1}">${userEvents.activity[k].client} </td>
-        <td id ="r${k+1}">${userEvents.activity[k].isAttri} </td>
-        <td id ="r${k+1}">${userEvents.activity[k].duration}</td>
-        <td id ="r${k+1}">${userEvents.activity[k].date}</td>
-        <td id ="r${k+1}">${userEvents.activity[k].startTime}</td>
-        <td id ="r${k+1}">${userEvents.activity[k].endTime}</td>
-        <td id ="r${k+1}"><button onclick = "editRow(${k+1})")>Edit</button></td>
+        <td id ="r ${k+1}">${userEvents.activity[k].eventName} </td>
+        <td id ="r ${k+1}">${userEvents.activity[k].type} </td>
+        <td id ="r ${k+1}">${userEvents.activity[k].activity} </td>
+        <td id ="r ${k+1}">${userEvents.activity[k].client} </td>
+        <td id ="r ${k+1}">${userEvents.activity[k].isAttri} </td>
+        <td id ="r ${k+1}">${userEvents.activity[k].duration}</td>
+        <td id ="r ${k+1}">${userEvents.activity[k].date}</td>
+        <td id ="r ${k+1}">${userEvents.activity[k].startTime}</td>
+        <td id ="r ${k+1}">${userEvents.activity[k].endTime}</td>
+        <td id ="r ${k+1}"><button onclick = "editRow(${k+1})" class="btn btn-outline-warning")>Edit</button></td>
         </tr>`
     }
 

@@ -18,16 +18,18 @@
         </div>
     </section>
 
-    <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+    <button id="signout_button" onclick="handleSignoutClick()" class="btn btn-outline-secondary">Salir</button>
 
-    <h1 id="username" hidden>¡Hola </h1>
-    <div id="dateForm" hidden>
-        <label for="startDate">Start Date</label>
-        <input type="date" id="startDate">
-        <label for="endDate">End Date</label>
-        <input type="date" id="endDate">
-        <button id="submitDates" onclick="searchEvents()">Load Events</button>
-    </div>
+    <section id="mod2" hidden>
+        <h1 id="username">¡Hola </h1>
+        <div id="dateForm">
+            <label for="startDate">Fecha Inicial</label>
+            <input type="date" id="startDate">
+            <label for="endDate">Fecha Final</label>
+            <input type="date" id="endDate">
+            <button id="submitDates" onclick="searchEvents()" class="btn btn-primary">Cargar</button>
+        </div>
+    </section>
 
     <div id="cxTable" hidden>
         <table class="table table-hover">
