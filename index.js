@@ -74,6 +74,7 @@ function handleAuthClick() {
 
         await getUserData();
 
+        document.getElementById('mod1').hidden = true;
         document.getElementById('signout_button').style.visibility = 'visible';
         document.getElementById('authorize_button').innerText = 'Refresh';
         document.getElementById('dateForm').removeAttribute("hidden");
@@ -166,7 +167,7 @@ async function listUpcomingEvents(start, end) {
         document.getElementById('content').innerText = err.message;
         return;
     }
-    
+
     const results = response.result
     const events = response.result.items;
     if (!events || events.length == 0) {
@@ -246,15 +247,16 @@ async function listUpcomingEvents(start, end) {
 
 
         table.innerHTML += `<tr>
-        <td>${userEvents.activity[k].eventName} </td>
-        <td>${userEvents.activity[k].type} </td>
-        <td>${userEvents.activity[k].activity} </td>
-        <td>${userEvents.activity[k].client} </td>
-        <td>${userEvents.activity[k].isAttri} </td>
-        <td>${userEvents.activity[k].duration}</td>
-        <td>${userEvents.activity[k].date}</td>
-        <td>${userEvents.activity[k].startTime}</td>
-        <td>${userEvents.activity[k].endTime}</td>
+        <td id ="r${k+1}">${userEvents.activity[k].eventName} </td>
+        <td id ="r${k+1}">${userEvents.activity[k].type} </td>
+        <td id ="r${k+1}">${userEvents.activity[k].activity} </td>
+        <td id ="r${k+1}">${userEvents.activity[k].client} </td>
+        <td id ="r${k+1}">${userEvents.activity[k].isAttri} </td>
+        <td id ="r${k+1}">${userEvents.activity[k].duration}</td>
+        <td id ="r${k+1}">${userEvents.activity[k].date}</td>
+        <td id ="r${k+1}">${userEvents.activity[k].startTime}</td>
+        <td id ="r${k+1}">${userEvents.activity[k].endTime}</td>
+        <td id ="r${k+1}"><button onclick = "editRow(${k+1})")>Edit</button></td>
         </tr>`
     }
 

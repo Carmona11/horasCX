@@ -1,0 +1,53 @@
+body {
+    background-image: url("https://app.simetrik.com/images/backgrund_security.svg");
+    background-position: bottom;
+    background-position-x: center;
+    background-position-y: bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+}
+
+#mod1 {
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#signIn {
+    border: 2px solid #B8CCFF;
+    width: 400px;
+    height: 540.73px;
+    border-radius: 16px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: 0 5px 4px 0 rgb(32 46 93 / 12%), 4px 3px 12px 0 rgb(32 46 93 / 5%);
+}
+
+#signIn h1 {
+    text-align: center;
+    font-size: 50px;
+}
+
+#signIn h2 {
+    text-decoration: underline;
+}
+
+
+
+#signIn button {
+    width: 80%;
+}
+
+
+
+
+
+
+
