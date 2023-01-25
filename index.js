@@ -19,7 +19,6 @@ let gapiInited = false;
 let gisInited = false;
 
 document.getElementById('authorize_button').style.visibility = 'hidden';
-document.getElementById('signout_button').style.visibility = 'hidden';
 
 /**
  * Callback after api.js is loaded.
@@ -75,7 +74,7 @@ function handleAuthClick() {
         await getUserData();
 
         document.getElementById('mod1').hidden = true;
-        document.getElementById('signout_button').style.visibility = 'visible';
+        document.getElementById('wrap-signout').removeAttribute("hidden");
         document.getElementById('authorize_button').innerText = 'Refresh';
         document.getElementById('mod2').removeAttribute("hidden");
         
