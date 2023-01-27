@@ -141,6 +141,7 @@ function handleSignoutClick() {
         document.getElementById('signout_button').style.visibility = 'hidden';
         document.getElementById('mod1').hidden = false;
         alert("ud se ha salido")
+        userName.innerHTML = ""
     }
 }
 
@@ -157,9 +158,9 @@ async function getUserData() {
         let userEmail = (response.result.summary);
 
         function getNameAndLastname(email) {
-            var parts = email.split(".");
-            var name = parts[0];
-            var lastname = parts[1].split("@")[0];
+            let parts = email.split(".");
+            let name = parts[0];
+            let lastname = parts[1].split("@")[0];
             return { name: name, lastname: lastname };
         }
 
@@ -199,7 +200,7 @@ async function listUpcomingEvents(start, end) {
             'showDeleted': false,
             'showDelegated': false,
             'singleEvents': true,
-            'orderBy': 'startTime',
+            'orderBy': 'startTime'
         };
         response = await gapi.client.calendar.events.list(request);
         document.getElementById('cxTable').removeAttribute("hidden")
@@ -241,7 +242,6 @@ async function listUpcomingEvents(start, end) {
         let code = client.split(" ");
         let codeLookup = code[code.length - 1];
 
-
         //En caso de que no sea asignable:
         if (isClient.length <= 2 || isClient === null) {
             userEvents.activity[k].type = "No Asignable"
@@ -268,7 +268,6 @@ async function listUpcomingEvents(start, end) {
 
         }
 
-
         // Extraemos la fecha-hora de inicio cada reunión
         startString = results.items[k].start.dateTime;
 
@@ -291,7 +290,6 @@ async function listUpcomingEvents(start, end) {
         userEvents.activity[k].startTime = startTime
         userEvents.activity[k].endTime = endTime
 
-
         table.innerHTML += `<tr>
         <td id ="r ${k + 1}">${userEvents.activity[k].date}</td>
         <td id ="r ${k + 1}">${userEvents.activity[k].eventName} </td>
@@ -300,7 +298,7 @@ async function listUpcomingEvents(start, end) {
         <td id ="r ${k + 1}">${userEvents.activity[k].client} </td>
         <td id ="r ${k + 1}">${userEvents.activity[k].isAttri} </td>
         <td id ="r ${k + 1}">${userEvents.activity[k].duration}</td>
-        <td id ="r ${k + 1}"><button onclick = "editRow(${k + 1})" class="btn btn-outline-warning")>Edit</button></td>
+        <td id ="r ${k + 1}" hidden><button onclick = "editRow(${k + 1})" class="btn btn-outline-warning")>Edit</button></td>
         </tr>`
     }
 
