@@ -18,7 +18,9 @@
         </div>
     </section>
 
-    <button id="signout_button" onclick="handleSignoutClick()" class="btn btn-outline-secondary">Salir</button>
+    <div id="wrap-signout" hidden>
+        <button id="signout_button" onclick="handleSignoutClick()" class="btn btn-outline-secondary">Salir</button>
+    </div>
 
     <section id="mod2" hidden>
         <h1 id="username">¡Hola </h1>
@@ -34,15 +36,13 @@
     <div id="cxTable" hidden>
         <table class="table table-hover">
             <thead class="thead-dark">
+                <th>Fecha</th>
                 <th>Nombre del evento</th>
                 <th>Tipo</th>
                 <th>Actividad</th>
                 <th>Cliente</th>
                 <th>No Asignable</th>
                 <th>Cantidad Horas</th>
-                <th>Fecha</th>
-                <th>Hora Inicio</th>
-                <th>Hora Final</th>
             </thead>
             <tbody id="cxHoras">
             </tbody>

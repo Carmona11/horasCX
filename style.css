@@ -1,12 +1,10 @@
 body {
-    background-image: url("https://app.simetrik.com/images/backgrund_security.svg");
-    background-position: bottom;
-    background-position-x: center;
-    background-position-y: bottom;
-    background-size: cover;
-    background-repeat: no-repeat;
     width: 100vw;
     min-height: 100vh;
+    background: url("https://app.simetrik.com/images/backgrund_security.svg") no-repeat center center fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+
 }
 
 #mod1 {
@@ -57,9 +55,13 @@ body {
     margin-left: 10px;
 }
 
-#signout_button {
-    margin-top: 10px;
-    margin-left: 96%;
+#wrap-signout {
+    display: flex;
+    justify-content: end;
+}
+
+#wrap-signout button {
+    margin: 5px 5px 0 0;
 }
 
 @media (max-width: 600px) {
