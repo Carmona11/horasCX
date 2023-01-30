@@ -234,7 +234,8 @@ async function listUpcomingEvents(start, end) {
             validador.toLowerCase().includes("no disponible") ||
             validador.toLowerCase().includes("ooo") ||
             validador.toLowerCase().includes("almuerzo") ||
-            validador.toLowerCase().includes("lunch time")
+            validador.toLowerCase().includes("lunch time") ||
+            validador.toLowerCase().includes("lunch")
         ) {
     
         } else {
@@ -312,7 +313,8 @@ async function listUpcomingEvents(start, end) {
         </tr>`
         }
     }
-
+     
+    console.log(userEvents)
 }
 
 
