@@ -224,73 +224,83 @@ async function listUpcomingEvents(start, end) {
     userEvents.user = results.summary;
     userEvents.activity = {};
 
-    console.log(results.items)
+    console.log(results)
 
     for (let k in results.items) {
 
-        //Extraemos el nombre del evento y validamos que este confirmado.
-        userEvents.activity[k] = {
-            eventName: results.items[k].summary,
-            status: results.items[k].status
-        }
-
-        //Extraemos nombre del cliente. Se divide el evento por "-" y se toma el primer elemento.
-        let client = userEvents.activity[k].eventName
-        let isClient = client.substring(0, client.indexOf("-"));
-
-        //Extraemos el codigo del lado derecho
-        let code = client.split(" ");
-        let codeLookup = code[code.length - 1];
-
-        //En caso de que no sea asignable:
-        if (isClient.length <= 2 || isClient === null) {
-            userEvents.activity[k].type = "No Asignable"
-            userEvents.activity[k].activity = "No Asignable"
-            userEvents.activity[k].client = "No Asignable"
-
-            if (codeLookup in asignacion) {
-                userEvents.activity[k].isAttri = asignacion[codeLookup].nombre
-            } else {
-                userEvents.activity[k].isAttri = "Código no existe"
-            }
-
-            //En caso de que sea asignable
+        // Omitimos los eventos tipo out of office
+        let validador = results.items[k].summary
+        if (validador.toLowerCase().includes("out of office") ||
+            validador.toLowerCase().includes("no disponible") ||
+            validador.toLowerCase().includes("ooo") ||
+            validador.toLowerCase().includes("almuerzo") ||
+            validador.toLowerCase().includes("lunch time")
+        ) {
+    
         } else {
-            userEvents.activity[k].client = isClient
-            userEvents.activity[k].type = "Asignable"
-            userEvents.activity[k].isAttri = " "
-
-            if (codeLookup in asignacion) {
-                userEvents.activity[k].activity = asignacion[codeLookup].nombre
-            } else {
-                userEvents.activity[k].activity = "Código no existe"
+            //Extraemos el nombre del evento y validamos que este confirmado.
+            userEvents.activity[k] = {
+                eventName: results.items[k].summary,
+                status: results.items[k].status
             }
 
-        }
+            //Extraemos nombre del cliente. Se divide el evento por "-" y se toma el primer elemento.
+            let client = userEvents.activity[k].eventName
+            let isClient = client.substring(0, client.indexOf("-"));
 
-        // Extraemos la fecha-hora de inicio cada reunión
-        startString = results.items[k].start.dateTime;
+            //Extraemos el codigo del lado derecho
+            let code = client.split(" ");
+            let codeLookup = code[code.length - 1];
 
-        // Obtenemos la fecha y la incluimos al objeto
-        eventDate = moment(startString).format("DD-MM-YYYY");
-        userEvents.activity[k].date = eventDate
+            //En caso de que no sea asignable:
+            if (isClient.length <= 2 || isClient === null) {
+                userEvents.activity[k].type = "No Asignable"
+                userEvents.activity[k].activity = "No Asignable"
+                userEvents.activity[k].client = "No Asignable"
 
-        //Extraemos la fecha-hora final de cada reunión
-        endString = results.items[k].end.dateTime
+                if (codeLookup in asignacion) {
+                    userEvents.activity[k].isAttri = asignacion[codeLookup].nombre
+                } else {
+                    userEvents.activity[k].isAttri = "Código no existe"
+                }
 
-        // Calculamos la diferencia de las horas y las agregamos al objetos
-        let date1 = new Date(startString);
-        let date2 = new Date(endString);
-        let eventDuration = ((date2.getTime() - date1.getTime()) / (1000 * 60)) / 60;
-        userEvents.activity[k].duration = eventDuration.toFixed(2);
+                //En caso de que sea asignable
+            } else {
+                userEvents.activity[k].client = isClient
+                userEvents.activity[k].type = "Asignable"
+                userEvents.activity[k].isAttri = " "
 
-        // Incluimos hora de inicio y hora final
-        let startTime = startString.substring(11, 13) + ":" + startString.substring(14, 16);
-        let endTime = endString.substring(11, 13) + ":" + endString.substring(14, 16);
-        userEvents.activity[k].startTime = startTime
-        userEvents.activity[k].endTime = endTime
+                if (codeLookup in asignacion) {
+                    userEvents.activity[k].activity = asignacion[codeLookup].nombre
+                } else {
+                    userEvents.activity[k].activity = "Código no existe"
+                }
 
-        table.innerHTML += `<tr>
+            }
+
+            // Extraemos la fecha-hora de inicio cada reunión
+            startString = results.items[k].start.dateTime;
+
+            // Obtenemos la fecha y la incluimos al objeto
+            eventDate = moment(startString).format("DD-MM-YYYY");
+            userEvents.activity[k].date = eventDate
+
+            //Extraemos la fecha-hora final de cada reunión
+            endString = results.items[k].end.dateTime
+
+            // Calculamos la diferencia de las horas y las agregamos al objetos
+            let date1 = new Date(startString);
+            let date2 = new Date(endString);
+            let eventDuration = ((date2.getTime() - date1.getTime()) / (1000 * 60)) / 60;
+            userEvents.activity[k].duration = eventDuration.toFixed(2);
+
+            // Incluimos hora de inicio y hora final
+            let startTime = startString.substring(11, 13) + ":" + startString.substring(14, 16);
+            let endTime = endString.substring(11, 13) + ":" + endString.substring(14, 16);
+            userEvents.activity[k].startTime = startTime
+            userEvents.activity[k].endTime = endTime
+
+            table.innerHTML += `<tr>
         <td id ="r ${k + 1}">${userEvents.activity[k].date}</td>
         <td id ="r ${k + 1}">${userEvents.activity[k].eventName} </td>
         <td id ="r ${k + 1}">${userEvents.activity[k].type} </td>
@@ -300,6 +310,7 @@ async function listUpcomingEvents(start, end) {
         <td id ="r ${k + 1}">${userEvents.activity[k].duration}</td>
         <td id ="r ${k + 1}" hidden><button onclick = "editRow(${k + 1})" class="btn btn-outline-warning")>Edit</button></td>
         </tr>`
+        }
     }
 
 }
