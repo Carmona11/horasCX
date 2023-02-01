@@ -259,7 +259,7 @@ async function listUpcomingEvents(start, end) {
             if (isClient.length <= 2 || isClient === null) {
                 userEvents.activity[k].type = "No Asignable"
                 userEvents.activity[k].activity = "No Asignable"
-                userEvents.activity[k].client = "No Asignable"
+                userEvents.activity[k].client = " "
 
                 if (codeLookup in asignacion) {
                     userEvents.activity[k].isAttri = asignacion[codeLookup].nombre
@@ -285,7 +285,7 @@ async function listUpcomingEvents(start, end) {
             startString = results.items[k].start.dateTime;
 
             // Obtenemos la fecha y la incluimos al objeto
-            eventDate = moment(startString).format("DD-MM-YYYY");
+            eventDate = moment(startString).format("MM-DD-YYYY");
             userEvents.activity[k].date = eventDate
 
             //Extraemos la fecha-hora final de cada reunión
