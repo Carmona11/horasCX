@@ -12,7 +12,7 @@ const asignacion = {
     "MG": { nombre: "Migraciones (Viabilidad: Gestión Proyecto)", categoria: "Services" },
     "MD": { nombre: "Migraciones (Viabilidad: Diseño de solución SA)", categoria: "Services" },
     "MI": { nombre: "Migraciones (Implementación: Gestión Proyecto)", categoria: "Services" },
-    "MB": { nombre: "Migraciones (Implementación: Configuración / BaaS)", categoria: "Services" },
+    "MCB": { nombre: "Migraciones (Implementación: Configuración / BaaS)", categoria: "Services" },
     "MS": { nombre: "Migraciones (Implementación: Diseño de solución SA)", categoria: "Services" },
     "GI": { nombre: "Gestión Integraciones (Weekly + Dailies)", categoria: "Integrations" },
     "II": { nombre: "Integración: Implementación", categoria: "Integrations" },
@@ -151,7 +151,9 @@ async function getUserData() {
     try {
         const request = {
             'calendarId': 'primary',
-            'maxResults': 1
+            'maxResults': 1,
+            'showDeleted': false,
+            'showDelegated': false
         };
         response = await gapi.client.calendar.events.list(request);
 
@@ -234,7 +236,8 @@ async function listUpcomingEvents(start, end) {
             validador.toLowerCase().includes("no disponible") ||
             validador.toLowerCase().includes("ooo") ||
             validador.toLowerCase().includes("almuerzo") ||
-            validador.toLowerCase().includes("lunch time")
+            validador.toLowerCase().includes("lunch time") ||
+            validador.toLowerCase().includes("lunch")
         ) {
     
         } else {
@@ -256,7 +259,7 @@ async function listUpcomingEvents(start, end) {
             if (isClient.length <= 2 || isClient === null) {
                 userEvents.activity[k].type = "No Asignable"
                 userEvents.activity[k].activity = "No Asignable"
-                userEvents.activity[k].client = "No Asignable"
+                userEvents.activity[k].client = " "
 
                 if (codeLookup in asignacion) {
                     userEvents.activity[k].isAttri = asignacion[codeLookup].nombre
@@ -282,7 +285,7 @@ async function listUpcomingEvents(start, end) {
             startString = results.items[k].start.dateTime;
 
             // Obtenemos la fecha y la incluimos al objeto
-            eventDate = moment(startString).format("DD-MM-YYYY");
+            eventDate = moment(startString).format("MM-DD-YYYY");
             userEvents.activity[k].date = eventDate
 
             //Extraemos la fecha-hora final de cada reunión
@@ -312,7 +315,8 @@ async function listUpcomingEvents(start, end) {
         </tr>`
         }
     }
-
+     
+    console.log(userEvents)
 }
 
 
