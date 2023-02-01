@@ -12,7 +12,7 @@ const asignacion = {
     "MG": { nombre: "Migraciones (Viabilidad: Gestión Proyecto)", categoria: "Services" },
     "MD": { nombre: "Migraciones (Viabilidad: Diseño de solución SA)", categoria: "Services" },
     "MI": { nombre: "Migraciones (Implementación: Gestión Proyecto)", categoria: "Services" },
-    "MB": { nombre: "Migraciones (Implementación: Configuración / BaaS)", categoria: "Services" },
+    "MCB": { nombre: "Migraciones (Implementación: Configuración / BaaS)", categoria: "Services" },
     "MS": { nombre: "Migraciones (Implementación: Diseño de solución SA)", categoria: "Services" },
     "GI": { nombre: "Gestión Integraciones (Weekly + Dailies)", categoria: "Integrations" },
     "II": { nombre: "Integración: Implementación", categoria: "Integrations" },
@@ -151,7 +151,9 @@ async function getUserData() {
     try {
         const request = {
             'calendarId': 'primary',
-            'maxResults': 1
+            'maxResults': 1,
+            'showDeleted': false,
+            'showDelegated': false
         };
         response = await gapi.client.calendar.events.list(request);
 
