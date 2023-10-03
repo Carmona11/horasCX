@@ -1,0 +1,83 @@
+body {
+    width: 100vw;
+    min-height: 100vh;
+    background: url("https://app.simetrik.com/images/backgrund_security.svg") no-repeat center center fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+}
+
+#mod1 {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#signIn {
+    border: 2px solid #B8CCFF;
+    width: 400px;
+    height: 540.73px;
+    border-radius: 16px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: 0 5px 4px 0 rgb(32 46 93 / 12%), 4px 3px 12px 0 rgb(32 46 93 / 5%);
+}
+
+#signIn h1 {
+    text-align: center;
+    font-size: 50px;
+}
+
+#signIn h2 {
+    text-decoration: underline;
+}
+
+#signIn button {
+    width: 80%;
+}
+
+#mod2 {
+    padding-left: 15px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+
+#username {
+    margin-bottom: 25px;
+}
+
+#submitDates {
+    margin-left: 10px;
+}
+
+#wrap-signout {
+    display: flex;
+    justify-content: end;
+}
+
+#wrap-signout button {
+    margin: 5px 5px 0 0;
+}
+
+@media (max-width: 600px) {
+    #mod2 {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-left: 0px;
+        padding-left: 0px;
+    }
+}
+
+@media (max-width: 600px) {
+    #submitDates {
+        margin-top: 20px;
+        width: 100%;
+    }
+}

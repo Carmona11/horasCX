@@ -1,9 +1,47 @@
-/* exported gapiLoaded */
-/* exported gisLoaded */
-/* exported handleAuthClick */
-/* exported handleSignoutClick */
+const asignacion = {
+    "GS": { nombre: "Gestión Success (Squad Leads + Weeklies Squads)", categoria: "Success - NC / LC" },
+    "TO": { nombre: "Training: Onboarding Cliente", categoria: "Success - NC / LC" },
+    "SC": { nombre: "Seguimiento Cliente (En vivo, trabajo interno) (CSM)", categoria: "Success - NC / LC" },
+    "TP": { nombre: "Training: Entrenamientos post implementación", categoria: "Success - NC / LC" },
+    "AFI": { nombre: "Acompañamiento en Fase Implementación (USM)", categoria: "Services" },
+    "AFP": { nombre: "Acompañamiento en Fase Post Implementación (USM)", categoria: "Services" },
+    "BC": { nombre: "BaaS (Costrucción casos de uso) (USM)", categoria: "Services" },
+    "GP": { nombre: "Gestión de proyecto (PM)", categoria: "Services" },
+    "DS": { nombre: "Diseño de solución (SA)", categoria: "Services" },
+    "MV": { nombre: "Migraciones (Viabilidad: Configuración / BaaS)", categoria: "Services" },
+    "MG": { nombre: "Migraciones (Viabilidad: Gestión Proyecto)", categoria: "Services" },
+    "MD": { nombre: "Migraciones (Viabilidad: Diseño de solución SA)", categoria: "Services" },
+    "MI": { nombre: "Migraciones (Implementación: Gestión Proyecto)", categoria: "Services" },
+    "MCB": { nombre: "Migraciones (Implementación: Configuración / BaaS)", categoria: "Services" },
+    "MS": { nombre: "Migraciones (Implementación: Diseño de solución SA)", categoria: "Services" },
+    "GI": { nombre: "Gestión Integraciones (Weekly + Dailies)", categoria: "Integrations" },
+    "II": { nombre: "Integración: Implementación", categoria: "Integrations" },
+    "IS": { nombre: "Integración: Soporte", categoria: "Integrations" },
+    "IE": { nombre: "Integración: Evolutivos", categoria: "Integrations" },
+    "GS": { nombre: "Gestión Support (Weekly + Dailies)", categoria: "Support - NC / LC" },
+    "ST": { nombre: "Soporte Técnico", categoria: "Support - NC / LC" },
+    "WO": { nombre: "Weeklies Otros Frentes (Producto, Tech, etc)", categoria: "Weeklies Otros Frentes (Producto, Tech, etc)" },
+    "AH": { nombre: "All Hands", categoria: "Reuniones Internas" },
+    "CH": { nombre: "Chapters", categoria: "Reuniones Internas" },
+    "11": { nombre: "1:1s", categoria: "Reuniones Internas" },
+    "SO": { nombre: "Sophos", categoria: "Reuniones Internas" },
+    "CP": { nombre: "Capacitación propia (recibida)", categoria: "Onboarding Interno" },
+    "CA": { nombre: "Capacitación a otros (dada)", categoria: "Onboarding Interno" },
+    "SC": { nombre: "Shadowing con clientes", categoria: "Onboarding Interno" },
+    "SU": { nombre: "Simetrik University / Probar funcionalidades / Stageton / QC - QA (Aportes al No Code)", categoria: "Producto" },
+    "PH": { nombre: "Prehandoff / Handoff / UX - UI (Aportes al No Code)", categoria: "Producto" },
+    "MB": { nombre: "Metabase (Aportes a BI - Producto)", categoria: "Producto" },
+    "POC": { nombre: "POC", categoria: "POC" },
+    "PA": { nombre: "Proyecto: Asignación de horas", categoria: "Proyectos e iniciativas" },
+    "PN": { nombre: "Pruebas New Hire", categoria: "Proyectos e iniciativas" },
+    "IS": { nombre: "Implementación y capacitación SalesForces", categoria: "Proyectos e iniciativas" },
+    "DO": { nombre: "Diseño Onboarding (Interno, Clientes, Partners)", categoria: "Proyectos e iniciativas" },
+    "VF": { nombre: "Vacaciones, Festivos, Incapacidades, Permisos", categoria: "Vacaciones" },
+    "NA": { nombre: "No asignable", categoria: "No asignable" }
+}
 
-// TODO(developer): Set to client ID and API key from the Developer Console
+
+// Asignamos API KEY y CLIENT ID para acceder a los servicios de Google.
 const CLIENT_ID = '365078314177-9ra77adje1vsre5sg4bv6209pripvsdq.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyCrMlZzT8RTF1QvOiYN5OLvL8jCs1YAniY';
 
@@ -77,7 +115,7 @@ function handleAuthClick() {
         document.getElementById('wrap-signout').removeAttribute("hidden");
         document.getElementById('authorize_button').innerText = 'Refresh';
         document.getElementById('mod2').removeAttribute("hidden");
-        
+
     };
 
     if (gapi.client.getToken() === null) {
@@ -103,6 +141,7 @@ function handleSignoutClick() {
         document.getElementById('signout_button').style.visibility = 'hidden';
         document.getElementById('mod1').hidden = false;
         alert("ud se ha salido")
+        userName.innerHTML = ""
     }
 }
 
@@ -112,21 +151,23 @@ async function getUserData() {
     try {
         const request = {
             'calendarId': 'primary',
-            'maxResults': 1
+            'maxResults': 1,
+            'showDeleted': false,
+            'showDelegated': false
         };
         response = await gapi.client.calendar.events.list(request);
 
         let userEmail = (response.result.summary);
 
         function getNameAndLastname(email) {
-            var parts = email.split(".");
-            var name = parts[0];
-            var lastname = parts[1].split("@")[0];
+            let parts = email.split(".");
+            let name = parts[0];
+            let lastname = parts[1].split("@")[0];
             return { name: name, lastname: lastname };
         }
-        
+
         let user = (getNameAndLastname(userEmail));
-    
+
         const userName = document.getElementById("username");
         userName.innerHTML += user.name + ' ' + user.lastname + '!';
         userName.removeAttribute("hidden")
@@ -146,6 +187,8 @@ function searchEvents() {
 
     startDate = new Date(document.getElementById("startDate").value);
     endDate = new Date(document.getElementById("endDate").value);
+    console.log(startDate);
+    console.log(endDate);
 
     listUpcomingEvents(startDate, endDate);
 }
@@ -159,8 +202,10 @@ async function listUpcomingEvents(start, end) {
             'timeMin': start.toISOString(),
             'timeMax': end.toISOString(),
             'showDeleted': false,
+            'showDelegated': false,
             'singleEvents': true,
             'orderBy': 'startTime',
+            'showDeclined': false
         };
         response = await gapi.client.calendar.events.list(request);
         document.getElementById('cxTable').removeAttribute("hidden")
@@ -176,91 +221,121 @@ async function listUpcomingEvents(start, end) {
         return;
     }
 
-    let userEvents = {};
+    let horasCx = {};
 
     const table = document.getElementById("cxHoras")
 
-    userEvents.timezone = results.timeZone;
-    userEvents.user = results.summary;
-    userEvents.activity = {};
+    horasCx.user = results.summary;
+    horasCx.timeZone = results.timeZone;
+    horasCx.activity = {};
+
+    console.log(response)
+    console.log(results)
 
     for (let k in results.items) {
 
-        //Extraemos el nombre del evento y validamos que este confirmado.
-        userEvents.activity[k] = {
-            eventName: results.items[k].summary,
-            status: results.items[k].status
+        // We don't take into account those OOO events
+        let checker = results.items[k].summary;
+
+        if (
+            checker.toLowerCase().includes("no disponible") ||
+            checker.toLowerCase().includes("ooo") ||
+            checker.toLowerCase().includes("almuerzo") ||
+            checker.toLowerCase().includes("lunch time") ||
+            checker.toLowerCase().includes("lunch") ||
+            checker.toLowerCase().includes("out of office")
+        ) {
+            continue;
         }
+        else {
 
-        //Extraemos nombre del cliente.
-        let client = userEvents.activity[k].eventName
-        let isClient = client.substring(0, client.indexOf("-"));
+            // Filter out those canceled events 
+            for (let j in results.items[k].attendees) {
+                if (
+                    results.items[k].attendees[j].email === horasCx.user &&
+                    results.items[k].attendees[j].responseStatus !== 'declined'
+                )
+                // Once confirmed that it is not an OOO nor declined
+                {
+                    // 1. Extract the name of the event.
+                    horasCx.activity[k] = {
+                        eventName: results.items[k].summary
+                    }
 
-        if (isClient.length <= 1) {
-            userEvents.activity[k].client = "No Asignable"
-            userEvents.activity[k].activity = "No Asignable"
-            userEvents.activity[k].type = "No Asignable"
+                    // 2. Extract the beginning and end date.
+                    startString = results.items[k].start.dateTime;
+                    eventDate = moment(startString).format("MM-DD-YYYY");
 
-            let code = client.split(" ");
-            for (let i = code.length - 1; i >= 0; i--) {
-                if (code[i].length === 3) {
-                    break;
-                } else {
-                    userEvents.activity[k].isAttri = "revisar código"
+                    endString = results.items[k].end.dateTime;
+
+                    // 2.1 Calculate the duration of the event.
+                    let date1 = new Date(startString);
+                    let date2 = new Date(endString);
+                    let eventDuration = ((date2.getTime() - date1.getTime()) / (1000 * 60)) / 60;
+
+                    // 2.2 Load to the object
+                    horasCx.activity[k].eventDate = eventDate;
+                    horasCx.activity[k].eventDuration = eventDuration.toFixed(2);
+
+
+                    // 3. Extract client's name and info from the event
+                    // 3.1 Resolve if it is assignable
+                    let summary = horasCx.activity[k].eventName
+                    let isClient = summary.substring(0, summary.indexOf("-"));
+
+                    // 3.2 Extract code from the activity
+                    let code = summary.split(" ");
+                    let codeLookup = code[code.length - 1];
+
+                    // 3.3 Load to the object.
+                    // If it is not assignable
+                    if (isClient.length <= 2 || isClient === null) {
+                        horasCx.activity[k].activity = "No Asignable"
+                        horasCx.activity[k].type = "No Asignable"
+                        horasCx.activity[k].client = ""
+
+                        // Add the code from the event
+                        if (codeLookup in asignacion) {
+                            horasCx.activity[k].isAttri = asignacion[codeLookup].nombre
+                        } else {
+                            horasCx.activity[k].isAttri = "Código no existe"
+                        }
+                    }
+                    else {
+                        horasCx.activity[k].client = isClient
+                        horasCx.activity[k].type = "Asignable"
+                        horasCx.activity[k].isAttri = ""
+
+                        if (codeLookup in asignacion) {
+                            horasCx.activity[k].activity = asignacion[codeLookup].nombre
+                        } else {
+                            horasCx.activity[k].activity = "Código no existe"
+                        }
+                    }
+                }
+                else {
+                    continue
                 }
             }
-        } else {
-            userEvents.activity[k].client = isClient
-            userEvents.activity[k].type = "Asignable"
-            userEvents.activity[k].isAttri = " "
-            let code = client.split(" ");
-            for (let i = code.length - 1; i >= 0; i--) {
-                if (code[i].length === 3) {
-                    userEvents.activity[k].activity = code[i];
-                    break;
-                } else {
-                    userEvents.activity[k].activity = "revisar código"
-                }
-            }
         }
-
-        // Extraemos la fecha-hora de inicio cada reunión
-        startString = results.items[k].start.dateTime;
-
-        // Obtenemos la fecha y la incluimos al objeto
-        eventDate = moment(startString).format("DD-MM-YYYY");
-        userEvents.activity[k].date = eventDate
-
-        //Extraemos la fecha-hora final de cada reunión
-        endString = results.items[k].end.dateTime
-
-        // Calculamos la diferencia de las horas y las agregamos al objetos
-        let date1 = new Date(startString);
-        let date2 = new Date(endString);
-        let eventDuration = ((date2.getTime() - date1.getTime()) / (1000 * 60)) / 60;
-        userEvents.activity[k].duration = eventDuration.toFixed(2);
-
-        // Incluimos hora de inicio y hora final
-        let startTime = startString.substring(11, 13) + ":" + startString.substring(14, 16);
-        let endTime = endString.substring(11, 13) + ":" + endString.substring(14, 16);
-        userEvents.activity[k].startTime = startTime
-        userEvents.activity[k].endTime = endTime
-
-
-        table.innerHTML += `<tr>
-        <td id ="r ${k+1}">${userEvents.activity[k].eventName} </td>
-        <td id ="r ${k+1}">${userEvents.activity[k].type} </td>
-        <td id ="r ${k+1}">${userEvents.activity[k].activity} </td>
-        <td id ="r ${k+1}">${userEvents.activity[k].client} </td>
-        <td id ="r ${k+1}">${userEvents.activity[k].isAttri} </td>
-        <td id ="r ${k+1}">${userEvents.activity[k].duration}</td>
-        <td id ="r ${k+1}">${userEvents.activity[k].date}</td>
-        <td id ="r ${k+1}">${userEvents.activity[k].startTime}</td>
-        <td id ="r ${k+1}">${userEvents.activity[k].endTime}</td>
-        <td id ="r ${k+1}"><button onclick = "editRow(${k+1})" class="btn btn-outline-warning")>Edit</button></td>
-        </tr>`
     }
 
-    console.log(userEvents)
+    // 4. Print the data into the page
+
+    for (k in horasCx.activity) {
+        table.innerHTML += `<tr>
+<td id ="r ${k + 1}">${horasCx.activity[k].eventDate} </td>
+<td id ="r ${k + 1}">${horasCx.activity[k].eventName} </td>
+<td id ="r ${k + 1}">${horasCx.activity[k].type} </td>
+<td id ="r ${k + 1}">${horasCx.activity[k].activity} </td>
+<td id ="r ${k + 1}">${horasCx.activity[k].client} </td>
+<td id ="r ${k + 1}">${horasCx.activity[k].isAttri} </td>
+<td id ="r ${k + 1}">${horasCx.activity[k].eventDuration}</td>
+<td id ="r ${k + 1}" hidden><button onclick = "editRow(${k + 1})" class="btn btn-outline-warning")>Edit</button></td>
+</tr>`
+    }
+
+    console.log(horasCx)
 }
+
 
