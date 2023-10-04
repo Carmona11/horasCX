@@ -34,11 +34,11 @@ let results = {
                 "displayName": "Yadhira Griselda Silva Villalon"
             },
             "start": {
-                "dateTime": "2023-10-02T09:00:00-05:00",
+                "dateTime": "2023-10-03T09:00:00-05:00",
                 "timeZone": "America/Bahia_Banderas"
             },
             "end": {
-                "dateTime": "2023-10-02T10:00:00-05:00",
+                "dateTime": "2023-10-03T10:00:00-05:00",
                 "timeZone": "America/Bahia_Banderas"
             },
             "recurringEventId": "_60q30c1g60o30e1i60o4ac1g60rj8gpl88rj2c1h84s34h9g60s30c1g60o30c1g8co4cea660pj2h9j8l148e9g64o30c1g60o30c1g60o30c1g60o32c1g60o30c1g75334gpp691jcg9k6l346e9k8p0jgd9n75146d2160p4cdq18l2g",
@@ -1025,6 +1025,7 @@ const asignacion = {
 //console.log(results.items[0].attendees[0].email);
 
 let horasCx = {};
+let totalHoras = {};
 
 horasCx.user = results.summary;
 horasCx.timeZone = results.timeZone;
@@ -1051,7 +1052,7 @@ for (let k in results.items) {
         for (let j in results.items[k].attendees) {
             if (
                 results.items[k].attendees[j].email === horasCx.user &&
-                results.items[k].attendees[j].responseStatus !== 'declined'
+                results.items[k].attendees[j].responseStatus === 'accepted'
             )
             // Once confirmed that it is not an OOO nor declined
             {
@@ -1073,9 +1074,13 @@ for (let k in results.items) {
 
                 // 2.2 Load to the object
                 horasCx.activity[k].eventDate = eventDate;
-                horasCx.activity[k].eventDuration = eventDuration.toFixed(2);
+                horasCx.activity[k].eventDuration = parseFloat(eventDuration.toFixed(1));;
 
-
+                totalHoras[k] = {
+                    "fecha": eventDate,
+                    "duracion": eventDuration
+                }
+                
                 // 3. Extract client's name and info from the event
                 // 3.1 Resolve if it is assignable
                 let summary = horasCx.activity[k].eventName
@@ -1133,11 +1138,5 @@ for (k in horasCx.activity) {
 </tr>`
 }
 
-
-
-
-
-
 console.log(horasCx)
-
 

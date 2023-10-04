@@ -236,7 +236,7 @@ async function listUpcomingEvents(start, end) {
 
         // We don't take into account those OOO events
         let checker = results.items[k].summary;
-
+    
         if (
             checker.toLowerCase().includes("no disponible") ||
             checker.toLowerCase().includes("ooo") ||
@@ -248,12 +248,12 @@ async function listUpcomingEvents(start, end) {
             continue;
         }
         else {
-
+    
             // Filter out those canceled events 
             for (let j in results.items[k].attendees) {
                 if (
                     results.items[k].attendees[j].email === horasCx.user &&
-                    results.items[k].attendees[j].responseStatus !== 'declined'
+                    results.items[k].attendees[j].responseStatus === 'accepted'
                 )
                 // Once confirmed that it is not an OOO nor declined
                 {
@@ -261,39 +261,38 @@ async function listUpcomingEvents(start, end) {
                     horasCx.activity[k] = {
                         eventName: results.items[k].summary
                     }
-
+    
                     // 2. Extract the beginning and end date.
                     startString = results.items[k].start.dateTime;
                     eventDate = moment(startString).format("MM-DD-YYYY");
-
+    
                     endString = results.items[k].end.dateTime;
-
+    
                     // 2.1 Calculate the duration of the event.
                     let date1 = new Date(startString);
                     let date2 = new Date(endString);
                     let eventDuration = ((date2.getTime() - date1.getTime()) / (1000 * 60)) / 60;
-
+    
                     // 2.2 Load to the object
                     horasCx.activity[k].eventDate = eventDate;
-                    horasCx.activity[k].eventDuration = eventDuration.toFixed(2);
-
-
+                    horasCx.activity[k].eventDuration = parseFloat(eventDuration.toFixed(1));;
+                    
                     // 3. Extract client's name and info from the event
                     // 3.1 Resolve if it is assignable
                     let summary = horasCx.activity[k].eventName
                     let isClient = summary.substring(0, summary.indexOf("-"));
-
+    
                     // 3.2 Extract code from the activity
                     let code = summary.split(" ");
                     let codeLookup = code[code.length - 1];
-
+    
                     // 3.3 Load to the object.
                     // If it is not assignable
                     if (isClient.length <= 2 || isClient === null) {
                         horasCx.activity[k].activity = "No Asignable"
                         horasCx.activity[k].type = "No Asignable"
                         horasCx.activity[k].client = ""
-
+    
                         // Add the code from the event
                         if (codeLookup in asignacion) {
                             horasCx.activity[k].isAttri = asignacion[codeLookup].nombre
@@ -305,7 +304,7 @@ async function listUpcomingEvents(start, end) {
                         horasCx.activity[k].client = isClient
                         horasCx.activity[k].type = "Asignable"
                         horasCx.activity[k].isAttri = ""
-
+    
                         if (codeLookup in asignacion) {
                             horasCx.activity[k].activity = asignacion[codeLookup].nombre
                         } else {
@@ -319,20 +318,18 @@ async function listUpcomingEvents(start, end) {
             }
         }
     }
-
-    // 4. Print the data into the page
-
+    
     for (k in horasCx.activity) {
         table.innerHTML += `<tr>
-<td id ="r ${k + 1}">${horasCx.activity[k].eventDate} </td>
-<td id ="r ${k + 1}">${horasCx.activity[k].eventName} </td>
-<td id ="r ${k + 1}">${horasCx.activity[k].type} </td>
-<td id ="r ${k + 1}">${horasCx.activity[k].activity} </td>
-<td id ="r ${k + 1}">${horasCx.activity[k].client} </td>
-<td id ="r ${k + 1}">${horasCx.activity[k].isAttri} </td>
-<td id ="r ${k + 1}">${horasCx.activity[k].eventDuration}</td>
-<td id ="r ${k + 1}" hidden><button onclick = "editRow(${k + 1})" class="btn btn-outline-warning")>Edit</button></td>
-</tr>`
+    <td id ="r ${k + 1}">${horasCx.activity[k].eventDate} </td>
+    <td id ="r ${k + 1}">${horasCx.activity[k].eventName} </td>
+    <td id ="r ${k + 1}">${horasCx.activity[k].type} </td>
+    <td id ="r ${k + 1}">${horasCx.activity[k].activity} </td>
+    <td id ="r ${k + 1}">${horasCx.activity[k].client} </td>
+    <td id ="r ${k + 1}">${horasCx.activity[k].isAttri} </td>
+    <td id ="r ${k + 1}">${horasCx.activity[k].eventDuration}</td>
+    <td id ="r ${k + 1}" hidden><button onclick = "editRow(${k + 1})" class="btn btn-outline-warning")>Edit</button></td>
+    </tr>`
     }
 
     console.log(horasCx)
