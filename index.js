@@ -232,6 +232,8 @@ async function listUpcomingEvents(start, end) {
     console.log(response)
     console.log(results)
 
+    console.log(results)
+
     for (let k in results.items) {
 
         // We don't take into account those OOO events
